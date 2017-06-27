@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>	
+	<title><%=page_title%></title>
+	<style>
+		.expandedButton{text-decoration:none;}
+	</style>		
+</head>
+<body>
+	<ul id="ulNote" style='list-style-type:none' >		
+		<%for(var i=0; i<notes_2D_Array[1].length; i++){%>	<!--Array 1 always == array2 length here-->		
+			<li >
+				<a id="<%=notes_2D_Array[0][i]%>" class="expandedButton" href="#">(+)&nbsp <%=notes_2D_Array[1][i]%></a> 
+				 
+				<p id="p<%=notes_2D_Array[0][i]%>" class="noteClass"></p>
+			</li>
+		<%}%>			
+	</ul>
+</body>

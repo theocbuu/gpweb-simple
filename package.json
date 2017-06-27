@@ -1,0 +1,24 @@
+{
+  "name": "gpweb",
+  "version": "1.0.0",
+  "description": "websites developing ",
+  "main": "app.js",
+  "bin": {
+    "gpweb": "mysqlCon.js"
+  },
+  "dependencies": {
+    "basic-auth": "^1.1.0",
+    "body-parser": "^1.17.1",
+    "ejs": "^2.5.5",
+    "express": "^4.14.0",
+    "http-auth": "^3.1.1",
+    "mysql": "^2.12.0",
+    "promises": "^0.2.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

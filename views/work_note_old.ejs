@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title><%=page_title%></title>
+	<style>
+		.expandedButton{text-decoration:none;}
+	</style>
+
+</head>
+<body>
+	<p id="p1">testing paragraph</p>
+	<ul id="ulNote" style='list-style-type:none' >
+		<%for(var i=0; i<notes_2D_Array[1].length; i++){%>	<!--Array 1 always == array2 length here-->
+			<li >
+				<a id="<%=notes_2D_Array[0][i]%>" class="expandedButton" href="#">(+)&nbsp <%=notes_2D_Array[1][i]%></a>
+
+				<p id="p<%=notes_2D_Array[0][i]%>" class="noteClass"></p>
+			</li>
+		<%}%>
+	</ul>
+
+	<form id="sbmtNote" >
+		Title:<input type="text" name="note_title" size="99"><br/><br/>
+		Note:<textarea type="text" name="note_content" rows="3" cols="100" style="vertical-align:middle"></textarea><br/><br/>
+		<input  type="submit" value="submit">
+	</form>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+	<script>
+		$(document).ready(function(){
+
+			var pNoteId = []; //get all note id on start up
+			$('.noteClass').each(function(i){
+				console.log($('.noteClass').length);
+				pNoteId[i] = $(this).attr('id');
+			});
+
+			/*****POST note title and content to the database*******/
+			var $noteTitle = $("input[name='note_title']"); //get elements by name
+			var $noteContent = $("textarea[name='note_content']");
+			$('#sbmtNote').submit(function(e){
+				var sbmtNoteObj = {
+					noteTitle: $noteTitle.val(), //get value into noteTitle
+					noteContent: $noteContent.val()
+				};
+
+				$.ajax({
+					type:'POST',
+					url:'work_note/add',
+					data: sbmtNoteObj,
+					success:function(noteIdObjFromRes){
+						console.log('successful adding new note');
+
+						$.each(noteIdObjFromRes, function(i, $noteIdObjFromRes){
+							$('#ulNote').append('<li><a  id="'+$noteIdObjFromRes+
+							'" class="expandedButton" href="#">(+)&nbsp'+$noteTitle.val()+'</a><br/>'+
+							'<p id="p'+$noteIdObjFromRes+'" ></p>');
+							pNoteId.push('p'+$noteIdObjFromRes);
+							//console.log(pNoteId);
+						});
+
+					},
+
+					error:function(){
+						alert('error adding new note');
+					}
+				});
+				e.preventDefault();
+			});
+			/******end of POST note title and content******/
+
+
+			/*********GET note_content to show*********/
+
+			$("a").on('click', function(){
+				console.log($('a'));
+				var linkId = $(this).attr('id');
+				console.log(linkId);
+				$.ajax({
+					type:"POST",
+					url:"work_note/linkId",
+					data: {clicked_id:linkId},
+					success: function(data){
+						//console.log(data); //data is a whole object
+						//console.log(data.thisvalue.length); //thisvalue is a variable in data object, and thisvalue is an array variable
+						$.each(data, function(i, dataObj){
+							for(var j=0; j<pNoteId.length; j++){
+								if(pNoteId[j] == 'p'+linkId){
+									document.getElementById(pNoteId[j]).innerHTML = dataObj;
+								}
+							}
+						});
+					}
+				});
+			});
+			/***********end of GET note_content************/
+		});
+
+
+
+	</script>
+</body>
+</html>
